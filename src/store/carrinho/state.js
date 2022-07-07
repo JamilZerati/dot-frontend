@@ -1,6 +1,6 @@
 export default function () {
   return {
-  items: [],
+    items: [],
     total: 0
   }
 }

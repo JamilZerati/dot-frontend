@@ -10,7 +10,7 @@ export default{
     }
   },
   CALCULATE_TOTAL(state, payload){
-    state.total +=payload;
+    state.total += parseFloat(payload);
 
   }
 }
