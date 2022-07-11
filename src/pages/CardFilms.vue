@@ -1,10 +1,10 @@
 <template>
-  <q-page class="flex flex-center" >
-    <div class="q-pa-md row items-start q-gutter-md">
+  <q-page >
+    <div class="q-pa-lg row items-start q-gutter-lg">
       <!-- <q-infinite-scroll @load="infiniteHandler(page)" :offset="100"> -->
-      <q-card class="my-card" v-for="(movie, index) in this.movies" :key="index">
+      <q-card class="my-card col-4  " v-for="(movie, index) in this.movies" :key="index">
         <div>
-          <q-btn class="favorite-button" icon="favorite" @click="handleFavorite(movie.id)"/>
+          <q-btn class="favorite-button no-shadow" icon="favorite" @click="handleFavorite(movie.id)"/>
           <img class="image-film" :src="renderFilm(movie.poster_path)" />
 
         </div>
@@ -23,7 +23,6 @@
       </q-card>
       <!-- </q-infinite-scroll> -->
     </div>
-
   </q-page>
 </template>
 
@@ -76,23 +75,24 @@ export default {
 
 <style scoped>
 .my-card {
-
-  max-width: 400px;
+  max-width: 250px;
   flex-direction: column;
   border-radius: 8px;
   background-color: rgb(124, 120, 120);
   color: #fff;
 }
+
 .info-values {
   background-color: #fff;
   color: #000;
   text-align: center;
 }
+
 .button-added {
   width: 100%;
-
   background-color: rgb(96, 32, 121);
 }
+
 .name-film {
   font-weight: 900;
   font-size: medium;
@@ -107,9 +107,12 @@ export default {
 .genre-name{
   font-weight: 800;
 }
+
 .favorite-button{
   position: absolute;
   right: 0;
+  box-shadow: none !important;
+
 }
 
 </style>

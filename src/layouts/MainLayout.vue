@@ -7,6 +7,7 @@
           </div>
           <div>
             <q-input class="bg-white" outlined type="text" label="Pesquisar" />
+            <q-btn icon="search"></q-btn>
           </div>
           <div>
              <q-btn
@@ -22,7 +23,11 @@
               round
               dense
               icon="shopping_cart"
-            />
+            >
+              <q-badge color="orange" floating>
+                {{$store.state.cart.items.length}}
+              </q-badge>
+            </q-btn>
           </div>
         </div>
       </q-header>
@@ -37,7 +42,7 @@
           <div class="q-pa-sm">
             <q-toolbar-title>Meus favoritos</q-toolbar-title>
             <div v-for="(favorite, index) in this.$store.state.favorites.favorites" :key="index">
-              aa
+              <div></div>
             </div>
           </div>
       </q-drawer>

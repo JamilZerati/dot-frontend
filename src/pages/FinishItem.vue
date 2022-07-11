@@ -32,13 +32,13 @@
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <td class="text-left">Frozen Yogurt</td>
-                <td class="text-right">Nome do Filme</td>
-                <td class="text-right">1</td>
-                <td class="text-right">R$9,99</td>
+              <tr v-for="(movie, index) in $store.state.cart.items" :key="index">
+                <td class="text-left">{{movie.name}}</td>
+                <td class="text-right">{{movie.name}}</td>
+                <td class="text-right">{{movie.quantity}}</td>
+                <td class="text-right">R$ {{movie.value*movie.quantity.toFixed(2)}}</td>
               </tr>
-              <span class="text-right"> Total: </span>
+              <span class="text-right"> Total: {{$store.state.cart.total.toFixed(2)}}</span>
               </tbody>
             </q-markup-table>
           </div>
