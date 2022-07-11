@@ -3,9 +3,7 @@
     <div class="q-pa-md row items-start q-gutter-md">
       <!-- <q-infinite-scroll @load="infiniteHandler(page)" :offset="100"> -->
       <q-card class="my-card" v-for="(movie, index) in this.movies" :key="index">
-          <div style="max-height: 500px; max-width: 350px;">
           <img class="image-film" :src="renderFilm(movie.poster_path)" />
-          </div>
 
         <q-card-section class="info-values">
           <div class="name-film">{{movie.title}}</div>
@@ -14,11 +12,11 @@
             <q-icon name="star"/>
             <div class="name-film">{{movie.vote_average}}</div>
             </div>
-            <div>{{movie.genre}}</div>
+            <div class="genre-name">{{movie.genre}}</div>
           </div>
           <div class="text-subtitle2">R$ {{(movie.price)}}</div>
         </q-card-section>
-        <q-btn class="button-added" label="Adicionar" @click="addMovieToCart({name: movie.title, value: movie.price})" />
+        <q-btn class="button-added" label="Adicionar" @click="addMovieToCart({id: movie.id, name: movie.title, value: movie.price, poster_path: movie.poster_path, quantity:1})" />
       </q-card>
       <!-- </q-infinite-scroll> -->
     </div>
@@ -60,24 +58,13 @@ export default {
     renderFilm(poster_path){
       return "https://image.tmdb.org/t/p/original"+poster_path
     },
-    // infiniteHandler(page){
-    //    this.$axios.get(`https://api.themoviedb.org/3/movie/popular?page=${page}&api_key=21b8377928741fe19614b01a1bbb49a3`)
-    // .then((res) => {
-    //   console.log("aquiii",res)
-    //     if (res.data.results){
-    //       this.page +=1
-    //     res.data.results.forEach(movie => this.movies.push(movie))
-    //       this.movies.push(res.data.results)
-    //       console.log(this.movies)
-    //     }
-    //    });
-    // }
   }
 };
 </script>
 
 <style scoped>
 .my-card {
+
   flex-direction: column;
   border-radius: 8px;
   background-color: rgb(124, 120, 120);
@@ -102,6 +89,10 @@ export default {
   max-height: 500px;
   display: flex;
   align-items: stretch;
+}
+
+.genre-name{
+  font-weight: 800;
 }
 
 </style>
