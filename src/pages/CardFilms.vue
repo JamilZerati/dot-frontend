@@ -43,7 +43,7 @@
           />
         </q-card>
       </div>
-      <div v-if="genreIds.length > 0" v-observe-visibility="infiniteHandler"/>
+      <div v-if="$store.state.movies.movies.length" v-observe-visibility="infiniteHandler"/>
   </q-page>
 </template>
 
@@ -79,8 +79,6 @@ export default {
             console.log("store", tempMovies);
             this.$store.dispatch("movies/setMovies", tempMovies);
           });
-        console.log(this.movies);
-        console.log("filterr", this.filter);
       });
     console.log(this.movies);
   },
