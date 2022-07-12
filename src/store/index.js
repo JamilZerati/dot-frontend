@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import cart from './carrinho'
 import favorites from './favorites'
+import movies from './movies'
 
 Vue.use(Vuex)
 
@@ -11,7 +12,8 @@ export default function () {
   const Store = new Vuex.Store({
     modules: {
       cart,
-      favorites
+      favorites,
+      movies
 
     },
     strict: process.env.DEBUGGING

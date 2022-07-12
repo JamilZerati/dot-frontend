@@ -1,9 +1,9 @@
 export default {
 
-  addFavorite({ commit }, id){
-    commit("ADD_FAVORITE", id)
+  addFavorite({ commit }, movie){
+    commit("ADD_FAVORITE", movie)
   },
   removeFavorite({ commit }, id){
-    commit("REMOVE_FAVORITE", id)
+    commit("REMOVE_FAVORITE", {id})
   }
 }

@@ -13,7 +13,7 @@ export default{
     state.items = state.items.filter( movie => movie.id !== payload.id)
   },
   CALCULATE_TOTAL(state, payload){
-    console.log(payload)
+    console.log("calculando o total",payload)
     state.total += parseFloat(payload);
 
   },
