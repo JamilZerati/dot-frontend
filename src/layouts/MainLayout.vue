@@ -57,7 +57,7 @@
         <div
           v-for="(favorite, index) in this.$store.state.favorites.favorites"
           :key="index"
-          class="flex-center"
+          class="flex-center row"
         >
           <img class="image-film" :src="renderFilm(favorite.poster_path)" />
           <span>{{ favorite.title }}</span>
@@ -65,12 +65,17 @@
           <q-btn
             icon="shopping_cart"
             @click="addMovieToCart(favorite.id)"
-            @mouseover="showCartText = true"
-            @mouseleave="showCartText = false"
+            size="50px; box-shadow: none; color:green;"
+            flat
           >
-            <span v-show="showCartText">Adicionar ao carrinho</span>
+            <q-tooltip> Adicionar ao carrinho</q-tooltip>
           </q-btn>
-          <q-btn icon="delete" @click="removeFromFavorite(favorite.id)" />
+          <q-btn 
+          icon="delete" 
+          flat
+          @click="removeFromFavorite(favorite.id)">
+          <q-tooltip> Remover dos favoritos</q-tooltip>
+          </q-btn>
         </div>
       </div>
     </q-drawer>
@@ -208,5 +213,9 @@ export default {
 }
 .image-film {
   width: 35px;
+}
+.add-to-cart-text {
+  color: white;
+  background-color: rgb(51, 49, 49);
 }
 </style>

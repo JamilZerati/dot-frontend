@@ -1,50 +1,49 @@
 <template>
   <q-page>
-    <div class="q-pa-lg row items-start q-gutter-lg">
-      <!-- <q-infinite-scroll @load="infiniteHandler(page)" :offset="100"> -->
-      <q-card
-        class="my-card col-4"
-        v-for="(movie, index) in $store.state.movies.movies.filter((movie) =>
-          movie.title.toLowerCase().includes($store.state.movies.filter)
-        )"
-        :key="index"
-      >
-        <div>
-          <q-btn
-            class="favorite-button no-shadow"
-            :class="[isFavorite(movie.id) ? 'favorite-mark' : '']"
-            icon="favorite"
-            @click="handleFavorite(movie.id)"
-          />
-          <img class="image-film" :src="renderFilm(movie.poster_path)" />
-        </div>
-        <q-card-section class="info-values">
-          <div class="name-film">{{ movie.title }}</div>
-          <div class="justify-evenly row">
-            <div class="flex-center row">
-              <q-icon name="star" />
-              <div class="name-film">{{ movie.vote_average }}</div>
-            </div>
-            <div class="genre-name">{{ movie.genre }}</div>
+      <div class="q-pa-lg row items-start q-gutter-lg">
+        <q-card
+          class="my-card col-4"
+          v-for="(movie, index) in $store.state.movies.movies.filter((movie) =>
+            movie.title.toLowerCase().includes($store.state.movies.filter)
+          )"
+          :key="index"
+        >
+          <div>
+            <q-btn
+              class="favorite-button no-shadow"
+              :class="[isFavorite(movie.id) ? 'favorite-mark' : '']"
+              icon="favorite"
+              @click="handleFavorite(movie.id)"
+            />
+            <img class="image-film" :src="renderFilm(movie.poster_path)" />
           </div>
-          <div class="text-subtitle2">R$ {{ movie.price }}</div>
-        </q-card-section>
-        <q-btn
-          class="button-added"
-          label="Adicionar"
-          @click="
-            addMovieToCart({
-              id: movie.id,
-              quantity: 1,
-              title: movie.title,
-              price: movie.price,
-              poster_path: movie.poster_path,
-            })
-          "
-        />
-      </q-card>
-      <!-- </q-infinite-scroll> -->
-    </div>
+          <q-card-section class="info-values">
+            <div class="name-film">{{ movie.title }}</div>
+            <div class="justify-evenly row">
+              <div class="flex-center row">
+                <q-icon name="star" />
+                <div class="name-film">{{ movie.vote_average }}</div>
+              </div>
+              <div class="genre-name">{{ movie.genre }}</div>
+            </div>
+            <div class="text-subtitle2">R$ {{ movie.price }}</div>
+          </q-card-section>
+          <q-btn
+            class="button-added"
+            label="Adicionar"
+            @click="
+              addMovieToCart({
+                id: movie.id,
+                quantity: 1,
+                title: movie.title,
+                price: movie.price,
+                poster_path: movie.poster_path,
+              })
+            "
+          />
+        </q-card>
+      </div>
+      <div v-if="genreIds.length > 0" v-observe-visibility="infiniteHandler"/>
   </q-page>
 </template>
 
@@ -53,18 +52,11 @@ export default {
   name: "CardFilms",
   data() {
     return {
-      page: "1",
-      movies: [],
-      genreIds: []
+      page: "2",
+      genreIds: [],
     };
   },
-  computed: {
-    filteredTitles() {
-      return this.$store.state.movies.movies.filter((movie) =>
-        movie.title.incldes(this.$store.state.movies.filter)
-      );
-    },
-  },
+
   created() {
     this.$axios
       .get(
@@ -93,8 +85,32 @@ export default {
     console.log(this.movies);
   },
   methods: {
-    isFavorite(movie_id){
-      return this.$store.state.favorites.favorites.find(movie => movie.id === movie_id)
+    infiniteHandler(isVisible) {
+      console.log("infinite");
+      if (!isVisible){return;}
+       this.$axios
+        .get(
+          `https://api.themoviedb.org/3/movie/popular?page=${this.page}&api_key=21b8377928741fe19614b01a1bbb49a3`
+        )
+        .then((res) => {
+          this.page++;
+          let tempMovies = res.data.results;
+          tempMovies.forEach((movie) => {
+            movie.price = ((Math.random() * 700) / 70).toFixed(2);
+            movie.genre = this.genreIds.find(
+              (data) => data.id === movie.genre_ids[0]
+            ).name;
+          });
+          console.log("store", tempMovies);
+          this.$store.dispatch("movies/setMovies", tempMovies);
+        });
+      console.log(this.movies);
+      console.log("filterr", this.filter);
+    },
+    isFavorite(movie_id) {
+      return this.$store.state.favorites.favorites.find(
+        (movie) => movie.id === movie_id
+      );
     },
     addMovieToCart(movie) {
       console.log(movie);
@@ -163,8 +179,7 @@ export default {
   box-shadow: none !important;
 }
 
-.favorite-mark{
+.favorite-mark {
   color: red;
 }
-
 </style>
