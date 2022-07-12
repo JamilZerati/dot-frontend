@@ -3,23 +3,24 @@
       <q-header elevated class="bg-black">
         <div class="header-main">
           <div>
+            <router-link style="text-decoration: none; color: white;" to="/">
             <q-toolbar-title>LOGO</q-toolbar-title>
+            </router-link>
           </div>
           <div>
-            <q-input class="bg-white" outlined type="text" label="Pesquisar" />
-            <q-btn icon="search"></q-btn>
+            <q-input class="bg-white" outlined v-model="model.search" label="Pesquisar"/>
           </div>
           <div>
              <q-btn
               flat
-              @click="drawerFavorite = !drawerFavorite"
+              @click="handleDrawer('drawerFavorite')"
               round
               dense
               icon="favorite"
             />
             <q-btn
               flat
-              @click="drawerCart = !drawerCart"
+              @click="handleDrawer('drawerCart')"
               round
               dense
               icon="shopping_cart"
@@ -90,7 +91,10 @@ export default {
   data () {
     return {
       drawerCart: false,
-      drawerFavorite: false
+      drawerFavorite: false,
+      model:{
+        search: ""
+      }
     }
   },
 
@@ -104,6 +108,16 @@ export default {
     removeAllFromCart(){
       this.$store.dispatch("cart/removeAllFromCart", );
     },
+    handleDrawer(drawer){
+      if ("drawerCart" === drawer){
+        this.drawerFavorite = false;
+        this.drawerCart = !this.drawerCart
+      }else{
+        this.drawerFavorite = !this.drawerFavorite;
+        this.drawerCart = false
+      }
+
+    }
   }
 }
 </script>
