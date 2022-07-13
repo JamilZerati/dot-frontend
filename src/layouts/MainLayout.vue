@@ -7,17 +7,20 @@
             <q-toolbar-title>LOGO</q-toolbar-title>
           </router-link>
         </div>
-        <div>
+        <div class="center row search-bar ">
           <q-input
-            class="bg-white"
+            class="bg-white search-input col-md-8"
             @keyup.enter="filterMovies(model.search)"
             outlined
             v-model="model.search"
             label="Pesquisar"
           >
             <q-btn
-              class="search-icon"
+              class="search-icon btn--no-hover col-md-auto"
               icon="search"
+              style="color: black; background: transparent;"
+              unelevated
+              flat
               @click="filterMovies(model.search)"
             />
           </q-input>
@@ -57,21 +60,21 @@
         <div
           v-for="(favorite, index) in this.$store.state.favorites.favorites"
           :key="index"
-          class="flex-center row"
+          class="flex row justify-between cart-items q-pa-sm center items-center"
         >
-          <img class="image-film" :src="renderFilm(favorite.poster_path)" />
+          <img class="image-film-cart-fav" :src="renderFilm(favorite.poster_path)" />
           <span>{{ favorite.title }}</span>
-          <span>{{ favorite.price }}</span>
+          <span>R$ {{ favorite.price }}</span>
           <q-btn
             icon="shopping_cart"
             @click="addMovieToCart(favorite.id)"
             size="50px; box-shadow: none; color:green;"
             flat
           >
-            <q-tooltip> Adicionar ao carrinho</q-tooltip>
+            <q-tooltip>Adicionar ao carrinho</q-tooltip>
           </q-btn>
-          <q-btn 
-          icon="delete" 
+          <q-btn
+          icon="delete"
           flat
           @click="removeFromFavorite(favorite.id)">
           <q-tooltip> Remover dos favoritos</q-tooltip>
@@ -88,29 +91,30 @@
       :width="300"
       :breakpoint="500"
     >
-      <q-scroll-area style="height: 82vh">
+      <q-scroll-area style="height: 84vh">
         <div class="q-pa-sm">
           <q-toolbar-title
             style="font-weigth: 500"
             class="flex row justify-between"
           >
             <div class="cart-style">Meu Carrinho</div>
-            <q-btn @click="removeAllFromCart()">Esvaziar</q-btn>
+            <q-btn flat @click="removeAllFromCart()">Esvaziar</q-btn>
           </q-toolbar-title>
           <div v-for="(item, index) in $store.state.cart.items" :key="index">
             <div
               class="flex row justify-between cart-items q-pa-sm center items-center"
             >
               <img
-                class="image-film-cart"
+                class="image-film-cart-fav"
                 :src="renderFilm(item.poster_path)"
               />
-              <div class="align-cen">{{ item.title }}</div>
+              <div class="align-center">{{ item.title }}</div>
               <div>{{ item.quantity }}</div>
               <div>R$ {{ item.price }}</div>
               <q-btn
                 size="1em"
                 icon="delete"
+                flat
                 @click="removeMovie(item.id, item.quantity * item.price)"
               ></q-btn>
             </div>
@@ -149,7 +153,6 @@ export default {
       return "https://image.tmdb.org/t/p/original" + poster_path;
     },
     addMovieToCart(movie_id) {
-      console.log(this.$store.state.favorites.favorites);
       let movie = this.$store.state.movies.movies.find(
         (movie) => movie.id === movie_id
       );
@@ -183,6 +186,10 @@ export default {
 </script>
 
 <style scoped>
+.search-input{
+  flex: 5;
+}
+
 .header-main {
   background-color: rgb(77, 207, 164);
   display: flex;
@@ -190,6 +197,7 @@ export default {
   align-items: center;
   padding: 10px;
 }
+
 .button-added {
   width: 100%;
   color: #fff;
@@ -203,13 +211,13 @@ export default {
   font-size: 0.75em;
 }
 
-.image-film-cart {
+.image-film-cart-fav {
   max-width: 50px;
   max-height: 50px;
 }
 
-.search-icon {
-  padding: 0px;
+.search-icon:hover .q-focus-helper {
+  display: none;
 }
 .image-film {
   width: 35px;

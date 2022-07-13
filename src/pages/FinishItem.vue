@@ -10,7 +10,7 @@
             class="button-added"
             flat
             label="Ir para a loja"
-            color="primary"
+            color="white"
             v-close-popup
           />
         </q-card-actions>
@@ -21,8 +21,9 @@
       <div class="row justify-around items-start">
         <div class="col-5">
           <q-form
-            @submit="() => !finishModal"
+            @submit="finishModal = !finishModal"
             class="row justify-between items-start"
+            id="teste"
             style="height: 50vh"
           >
             <q-input
@@ -93,42 +94,45 @@
               label="Estado"
               :rules="[(val) => !!val || 'O estado é obrigatorio.']"
             />
-            <q-btn type="submit" class="button-added">Finalizar</q-btn>
           </q-form>
         </div>
         <div class="col-5">
           <div>
             <q-markup-table style="height: 50vh">
               <thead style="font-size: 35px">
-                <tr>
-                  <th class="text-left">Image</th>
-                  <th class="text-right">Nome</th>
-                  <th class="text-right">Qtd</th>
-                  <th class="text-right">Preço</th>
-                </tr>
+              <tr>
+                <th class="text-left">Image</th>
+                <th class="text-right">Nome</th>
+                <th class="text-right">Qtd</th>
+                <th class="text-right">Preço</th>
+              </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="(movie, index) in $store.state.cart.items"
-                  :key="index"
-                >
-                  <td class="text-left">
-                    <img
-                      class="cart-movie-poster"
-                      :src="renderFilm(movie.poster_path)"
-                    />
-                  </td>
-                  <td class="text-right">{{ movie.title }}</td>
-                  <td class="text-right">{{ movie.quantity }}</td>
-                  <td class="text-right">
-                    R$ {{ movie.price * movie.quantity.toFixed(2) }}
-                  </td>
-                </tr>
-                <span class="text-right">
+              <tr
+                v-for="(movie, index) in $store.state.cart.items"
+                :key="index"
+              >
+                <td class="text-left">
+                  <img
+                    class="cart-movie-poster"
+                    :src="renderFilm(movie.poster_path)"
+                  />
+                </td>
+                <td class="text-right">{{ movie.title }}</td>
+                <td class="text-right">{{ movie.quantity }}</td>
+                <td class="text-right">
+                  R$ {{ (movie.price * movie.quantity).toFixed(2) }}
+                </td>
+                <td>
+                  <q-btn flat icon="delete" @click="removeFromCart(movie.id, movie.price*movie.quantity)"></q-btn>
+                </td>
+              </tr>
+              <span class="text-right">
                   Total: {{ $store.state.cart.total.toFixed(2) }}</span
-                >
+              >
               </tbody>
             </q-markup-table>
+            <q-btn form="teste" type="submit" class="q-my-md button-added">Finalizar</q-btn>
           </div>
         </div>
       </div>
@@ -136,9 +140,11 @@
   </q-page>
 </template>
 <script>
-name: "FinishItem";
+
 
 export default {
+  name: "FinishItem",
+
   data() {
     return {
       invalidCep: false,
@@ -156,9 +162,6 @@ export default {
     };
   },
   methods: {
-    reset() {
-      inputRef.value.resetValidation();
-    },
     async getAddress(zipcode) {
       let cep = zipcode.replace("-", "").replace(/ /g, "");
       if (cep.length < 8) {
@@ -167,7 +170,6 @@ export default {
       await this.$axios
         .get(`https://viacep.com.br/ws/${cep}/json`)
         .then((res) => {
-          console.log(res.data);
           if (res.data.erro === "true") {
             this.form.state = "";
             this.form.address = "";
@@ -184,30 +186,31 @@ export default {
           console.log(err);
           this.invalidCep = true;
         });
-      console.log(this.invalidCep);
     },
 
     renderFilm(poster_path) {
       return "https://image.tmdb.org/t/p/original" + poster_path;
     },
+    removeFromCart(movie_id, price) {
+      this.$store.dispatch("cart/removeMovie", {id: movie_id, price: price})
+    },
     customValidation(input, value) {
-      if (input == "cpf") {
+      if (input === "cpf") {
         let cpf = value.replace(/[^\d]+/g, "");
-        console.log("to no cpf");
-        if (cpf == "") return false;
+        if (cpf === "") return false;
         // Elimina CPFs invalidos conhecidos
         if (
-          cpf.length != 11 ||
-          cpf == "00000000000" ||
-          cpf == "11111111111" ||
-          cpf == "22222222222" ||
-          cpf == "33333333333" ||
-          cpf == "44444444444" ||
-          cpf == "55555555555" ||
-          cpf == "66666666666" ||
-          cpf == "77777777777" ||
-          cpf == "88888888888" ||
-          cpf == "99999999999"
+          cpf.length !== 11 ||
+          cpf === "00000000000" ||
+          cpf === "11111111111" ||
+          cpf === "22222222222" ||
+          cpf === "33333333333" ||
+          cpf === "44444444444" ||
+          cpf === "55555555555" ||
+          cpf === "66666666666" ||
+          cpf === "77777777777" ||
+          cpf === "88888888888" ||
+          cpf === "99999999999"
         )
           return false;
         // Valida 1o digito
@@ -215,17 +218,17 @@ export default {
         let i = 0;
         for (i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
         let rev = 11 - (add % 11);
-        if (rev == 10 || rev == 11) rev = 0;
-        if (rev != parseInt(cpf.charAt(9))) return false;
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(9))) return false;
         // Valida 2o digito
         add = 0;
         for (i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
         rev = 11 - (add % 11);
-        if (rev == 10 || rev == 11) rev = 0;
-        if (rev != parseInt(cpf.charAt(10))) return false;
+        if (rev === 10 || rev === 11) rev = 0;
+        if (rev !== parseInt(cpf.charAt(10))) return false;
         return true;
       }
-      if (input == "email") {
+      if (input === "email") {
         return value
           .toLowerCase()
           .match(
@@ -241,6 +244,7 @@ export default {
 .cart-movie-poster {
   width: 50px;
 }
+
 .button-added {
   color: white;
   width: 100%;

@@ -4,7 +4,6 @@ export default {
     commit("SET_MOVIES", payload)
   },
   filterMovies({ commit }, payload){
-    console.log("filtrando com", payload)
     commit("FILTER_MOVIES", payload)
   }
 }

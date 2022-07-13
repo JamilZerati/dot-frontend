@@ -5,6 +5,9 @@ export default{
     if (alreadyExists){
       alreadyExists.quantity++;
     }else{
+      if (payload.quantity === undefined){
+        payload.quantity = 1;
+      }
       state.items.push(payload)
     }
 
@@ -13,7 +16,6 @@ export default{
     state.items = state.items.filter( movie => movie.id !== payload.id)
   },
   CALCULATE_TOTAL(state, payload){
-    console.log("calculando o total",payload)
     state.total += parseFloat(payload);
 
   },

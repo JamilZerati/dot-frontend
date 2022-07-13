@@ -13,6 +13,7 @@
               class="favorite-button no-shadow"
               :class="[isFavorite(movie.id) ? 'favorite-mark' : '']"
               icon="favorite"
+              flat
               @click="handleFavorite(movie.id)"
             />
             <img class="image-film" :src="renderFilm(movie.poster_path)" />
@@ -76,15 +77,12 @@ export default {
                 (data) => data.id === movie.genre_ids[0]
               ).name;
             });
-            console.log("store", tempMovies);
             this.$store.dispatch("movies/setMovies", tempMovies);
           });
       });
-    console.log(this.movies);
   },
   methods: {
     infiniteHandler(isVisible) {
-      console.log("infinite");
       if (!isVisible){return;}
        this.$axios
         .get(
@@ -99,11 +97,8 @@ export default {
               (data) => data.id === movie.genre_ids[0]
             ).name;
           });
-          console.log("store", tempMovies);
           this.$store.dispatch("movies/setMovies", tempMovies);
         });
-      console.log(this.movies);
-      console.log("filterr", this.filter);
     },
     isFavorite(movie_id) {
       return this.$store.state.favorites.favorites.find(
@@ -111,14 +106,12 @@ export default {
       );
     },
     addMovieToCart(movie) {
-      console.log(movie);
       this.$store.dispatch("cart/addMovie", movie);
     },
     renderFilm(poster_path) {
       return "https://image.tmdb.org/t/p/original" + poster_path;
     },
     handleFavorite(movie_id) {
-      console.log("Procurano por ", movie_id);
       let movie = this.$store.state.favorites.favorites.find(
         (movie) => movie.id === movie_id
       );
@@ -128,7 +121,6 @@ export default {
         let movieToAdd = this.$store.state.movies.movies.find(
           (movie) => movie.id === movie_id
         );
-        console.log("add", movieToAdd);
         this.$store.dispatch("favorites/addFavorite", movieToAdd);
       }
     },
