@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <q-dialog v-model="finishModal">
-      <q-card>
+      <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>Obrigado {{ form.name }}!</q-card-section>
 
         <q-card-section>Sua compra foi finalizada com sucesso!</q-card-section>
@@ -11,6 +11,7 @@
             flat
             label="Ir para a loja"
             color="white"
+            to="/"
             v-close-popup
           />
         </q-card-actions>
@@ -21,9 +22,9 @@
       <div class="row justify-around items-start">
         <div class="col-5">
           <q-form
-            @submit="finishModal = !finishModal"
+            @submit="finishOrder()"
             class="row justify-between items-start"
-            id="teste"
+            id="formData"
             style="height: 50vh"
           >
             <q-input
@@ -127,12 +128,12 @@
                   <q-btn flat icon="delete" @click="removeFromCart(movie.id, movie.price*movie.quantity)"></q-btn>
                 </td>
               </tr>
-              <span class="text-right">
-                  Total: {{ $store.state.cart.total.toFixed(2) }}</span
+              <span class="text-right total-finish q-pa-sm">
+                  Total: R${{ $store.state.cart.total.toFixed(2) }}</span
               >
               </tbody>
             </q-markup-table>
-            <q-btn form="teste" type="submit" class="q-my-md button-added">Finalizar</q-btn>
+            <q-btn form="formData" type="submit" class="q-my-md button-added">Finalizar</q-btn>
           </div>
         </div>
       </div>
@@ -144,7 +145,6 @@
 
 export default {
   name: "FinishItem",
-
   data() {
     return {
       invalidCep: false,
@@ -194,6 +194,13 @@ export default {
     removeFromCart(movie_id, price) {
       this.$store.dispatch("cart/removeMovie", {id: movie_id, price: price})
     },
+    finishOrder(){
+      if (this.$store.state.cart.items.length === 0){
+        return
+      }else{
+        this.finishModal = !this.finishModal
+      }
+    },
     customValidation(input, value) {
       if (input === "cpf") {
         let cpf = value.replace(/[^\d]+/g, "");
@@ -241,6 +248,9 @@ export default {
 </script>
 
 <style>
+.total-finish{
+  font-weight: 800;
+}
 .cart-movie-poster {
   width: 50px;
 }

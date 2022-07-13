@@ -62,22 +62,26 @@
           :key="index"
           class="flex row justify-between cart-items q-pa-sm center items-center"
         >
-          <img class="image-film-cart-fav" :src="renderFilm(favorite.poster_path)" />
+          <img class="image-film-cart-fav" :src="renderFilm(favorite.poster_path)"/>
           <span>{{ favorite.title }}</span>
           <span>R$ {{ favorite.price }}</span>
           <q-btn
             icon="shopping_cart"
+            dense
             @click="addMovieToCart(favorite.id)"
-            size="50px; box-shadow: none; color:green;"
+            size="1em"
+            color="green"
             flat
           >
             <q-tooltip>Adicionar ao carrinho</q-tooltip>
           </q-btn>
           <q-btn
-          icon="delete"
-          flat
-          @click="removeFromFavorite(favorite.id)">
-          <q-tooltip> Remover dos favoritos</q-tooltip>
+            icon="delete"
+            dense
+            flat
+            size="1em"
+            @click="removeFromFavorite(favorite.id)">
+            <q-tooltip>Remover dos favoritos</q-tooltip>
           </q-btn>
         </div>
       </div>
@@ -123,12 +127,12 @@
       </q-scroll-area>
       <span>Total: R$ {{ $store.state.cart.total.toFixed(2) }}</span>
       <router-link to="/FinishItem">
-        <q-btn class="button-added" label="Finalizar"> </q-btn>
+        <q-btn class="button-added" label="Finalizar"></q-btn>
       </router-link>
     </q-drawer>
 
     <q-page-container>
-      <router-view v-bind="{ filterName }" />
+      <router-view v-bind="{ filterName }"/>
     </q-page-container>
   </q-layout>
 </template>
@@ -159,7 +163,7 @@ export default {
       this.$store.dispatch("cart/addMovie", movie);
     },
     removeMovie(id, price) {
-      this.$store.dispatch("cart/removeMovie", { id, price });
+      this.$store.dispatch("cart/removeMovie", {id, price});
     },
     removeAllFromCart() {
       this.$store.dispatch("cart/removeAllFromCart");
@@ -169,8 +173,9 @@ export default {
         this.drawerFavorite = false;
         this.drawerCart = !this.drawerCart;
       } else {
-        this.drawerFavorite = !this.drawerFavorite;
         this.drawerCart = false;
+        this.drawerFavorite = !this.drawerFavorite;
+
       }
     },
     filterMovies(title) {
@@ -186,7 +191,7 @@ export default {
 </script>
 
 <style scoped>
-.search-input{
+.search-input {
   flex: 5;
 }
 
@@ -207,23 +212,14 @@ export default {
 .cart-style {
   font-size: 1em;
 }
+
 .cart-items {
   font-size: 0.75em;
 }
 
 .image-film-cart-fav {
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 45px;
+  max-height: 45px;
 }
 
-.search-icon:hover .q-focus-helper {
-  display: none;
-}
-.image-film {
-  width: 35px;
-}
-.add-to-cart-text {
-  color: white;
-  background-color: rgb(51, 49, 49);
-}
 </style>

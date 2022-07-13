@@ -1,38 +1,38 @@
 <template>
   <q-page>
-      <div class="q-pa-lg row items-start q-gutter-lg">
-        <q-card
-          class="my-card col-4"
-          v-for="(movie, index) in $store.state.movies.movies.filter((movie) =>
+    <div class="q-pa-lg row items-start q-gutter-lg">
+      <q-card
+        class="my-card col-4"
+        v-for="(movie, index) in $store.state.movies.movies.filter((movie) =>
             movie.title.toLowerCase().includes($store.state.movies.filter)
           )"
-          :key="index"
-        >
-          <div>
-            <q-btn
-              class="favorite-button no-shadow"
-              :class="[isFavorite(movie.id) ? 'favorite-mark' : '']"
-              icon="favorite"
-              flat
-              @click="handleFavorite(movie.id)"
-            />
-            <img class="image-film" :src="renderFilm(movie.poster_path)" />
-          </div>
-          <q-card-section class="info-values">
-            <div class="name-film">{{ movie.title }}</div>
-            <div class="justify-evenly row">
-              <div class="flex-center row">
-                <q-icon name="star" />
-                <div class="name-film">{{ movie.vote_average }}</div>
-              </div>
-              <div class="genre-name">{{ movie.genre }}</div>
-            </div>
-            <div class="text-subtitle2">R$ {{ movie.price }}</div>
-          </q-card-section>
+        :key="index"
+      >
+        <div>
           <q-btn
-            class="button-added"
-            label="Adicionar"
-            @click="
+            class="favorite-button no-shadow"
+            :class="[isFavorite(movie.id) ? 'favorite-mark' : '']"
+            icon="favorite"
+            flat
+            @click="handleFavorite(movie.id)"
+          />
+          <img class="image-film" :src="renderFilm(movie.poster_path)"/>
+        </div>
+        <q-card-section class="info-values">
+          <div class="name-film">{{ movie.title }}</div>
+          <div class="justify-evenly row">
+            <div class="flex-center row">
+              <q-icon name="star"/>
+              <div class="name-film">{{ movie.vote_average }}</div>
+            </div>
+            <div class="genre-name">{{ movie.genre }}</div>
+          </div>
+          <div class="text-subtitle2">R$ {{ movie.price }}</div>
+        </q-card-section>
+        <q-btn
+          class="button-added"
+          label="Adicionar"
+          @click="
               addMovieToCart({
                 id: movie.id,
                 quantity: 1,
@@ -41,10 +41,10 @@
                 poster_path: movie.poster_path,
               })
             "
-          />
-        </q-card>
-      </div>
-      <div v-if="$store.state.movies.movies.length" v-observe-visibility="infiniteHandler"/>
+        />
+      </q-card>
+    </div>
+    <div v-if="$store.state.movies.movies.length" v-observe-visibility="infiniteHandler"/>
   </q-page>
 </template>
 
@@ -83,8 +83,10 @@ export default {
   },
   methods: {
     infiniteHandler(isVisible) {
-      if (!isVisible){return;}
-       this.$axios
+      if (!isVisible) {
+        return;
+      }
+      this.$axios
         .get(
           `https://api.themoviedb.org/3/movie/popular?page=${this.page}&api_key=21b8377928741fe19614b01a1bbb49a3`
         )
